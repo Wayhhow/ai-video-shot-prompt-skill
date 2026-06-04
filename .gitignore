@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# 转录与音频产物（不进入仓库；用 assets/transcribe.py 自行生成）
+audio_16k_mono.wav
+audio_*.wav
+audio_*.mp3
+transcript.txt
+transcript.json
+transcript.srt
+transcript_*.txt
+*_纯文本.txt
+*纯文本*.txt
+transcript_clean.txt
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 本地日志
+*.log
+transcript.log
+
+# 临时文件
+*.tmp
+*.bak
+
+# 隐私
+.env
+.env.local
