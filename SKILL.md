@@ -122,7 +122,7 @@ description: 为 AI 视频生成（即梦/Vidu/可灵/小云雀/Sora/Runway 等�
 | [templates/action-scene.md](templates/action-scene.md) | 动作/打斗分镜模板 |
 | [templates/style-presets.md](templates/style-presets.md) | 原子朋克/末日丧尸/电影动作等风格预设 |
 | [scripts/validate_prompt.py](scripts/validate_prompt.py) | 提示词结构自检脚本 |
-| [assets/transcript.txt](assets/transcript.txt) | 原始视频转录（来源：《丧尸清道夫》创作者分享 BV1xuVC6AEbg） |
+| [assets/transcribe.py](assets/transcribe.py) | faster-whisper 转录脚本（供用户自行从 B 站源视频生成转录，仓库不包含任何转录/音频产物） |
 
 ## 安装到 Trae IDE
 

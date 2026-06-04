@@ -6,14 +6,18 @@
 
 > 一套把"原子朋克丧尸清道夫"风格方法论，封装成可复用 Agent Skill 的提示词工程工作流。
 
+<p align="center">
+  <img src="cover.jpg" alt="Crafting AI Video Shot Prompts — Cover" width="720">
+</p>
+
 [演示](#演示) · [三大部分框架](#三大部分框架) · [快速开始](#快速开始) · [完整示例](#完整示例) · [致谢](#致谢)
 
-![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
-![Skill: Trae / Claude](https://img.shields.io/badge/skill-Trae%20%2F%20Claude-blueviolet)
-![Language: 中文](https://img.shields.io/badge/language-中文-red)
-![Inspired by: Mx-Shell](https://img.shields.io/badge/inspired%20by-Mx--Shell-ff69b4)
-![Status: v0.1](https://img.shields.io/badge/version-v0.1-orange)
-![GitHub: Wayhhow](https://img.shields.io/badge/github-Wayhhow-181717?logo=github)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Skill: Trae / Claude](https://img.shields.io/badge/skill-Trae%20%2F%20Claude-blueviolet)](SKILL.md)
+[![Language: 中文](https://img.shields.io/badge/language-中文-red)]()
+[![Inspired by: Mx-Shell](https://img.shields.io/badge/inspired%20by-Mx--Shell-ff69b4)](https://space.bilibili.com/388217494)
+[![Status: v0.1](https://img.shields.io/badge/version-v0.1-orange)](CHANGELOG.md)
+[![GitHub Repo stars](https://img.shields.io/github/stars/Wayhhow/ai-video-shot-prompt-skill?style=social)](https://github.com/Wayhhow/ai-video-shot-prompt-skill)
 
 </div>
 
@@ -168,6 +172,7 @@ python scripts/validate_prompt.py my_prompt.txt
 
 ```
 crafting-ai-video-shot-prompts/
+├── cover.jpg                        # README 顶部封面图
 ├── SKILL.md                        # 主入口：触发条件 + 工作流 + 速查
 ├── README.md                       # 本文件
 ├── CREDITS.md                      # 致谢与引用列表
