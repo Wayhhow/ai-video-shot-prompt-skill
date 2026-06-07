@@ -10,6 +10,8 @@
 
 如果 baseline 文件不存在，所有测试 skip 而非 fail（首次跑或清理后不阻塞）。
 """
+from __future__ import annotations
+
 import re
 import subprocess
 import sys

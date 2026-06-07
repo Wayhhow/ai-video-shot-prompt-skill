@@ -6,6 +6,8 @@
 1. 用户写了一份不合规的提示词 → validate_prompt.py 应检出 → 用户修复 → 重新验证通过
 2. stdin 路径与文件路径输出完全一致（无 file vs stdin 分支行为差异）
 """
+from __future__ import annotations
+
 import subprocess
 import sys
 from pathlib import Path
