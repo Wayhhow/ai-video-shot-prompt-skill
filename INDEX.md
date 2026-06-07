@@ -29,7 +29,7 @@ ai-video-shot-prompt-skill/
 │   ├── single-shot.md                 # 单镜头模板
 │   ├── multi-shot.md                  # 多分镜模板
 │   ├── action-scene.md                # 动作场景模板（含完整机器人 vs 丧尸示例）
-│   └── style-presets.md               # 10 种风格预设（原子朋克/赛博朋克/水墨…）
+│   └── style-presets.md               # 15 种风格预设（原子朋克/赛博朋克/水墨/机甲/古风…）
 │
 ├── scripts/
 │   └── validate_prompt.py             # 提示词结构自检脚本
@@ -110,19 +110,20 @@ python scripts/validate_prompt.py my_prompt.txt
 
 | 指标 | 数值 |
 | --- | --- |
-| 文件总数（开发态） | 25 |
-| 仓库实际文件（上传 GitHub 后） | 21 |
-| 总大小（开发态） | ~510 KB |
-| 仓库实际大小 | ~316 KB |
-| Markdown 文档 | 14 |
-| Python 脚本 | 3 |
+| 文件总数（开发态） | 31 |
+| 仓库实际文件（上传 GitHub 后） | 27 |
+| 总大小（开发态） | ~520 KB |
+| 仓库实际大小 | ~325 KB |
+| Markdown 文档 | 16 |
+| Python 脚本 | 3（validate_prompt / transcribe / merge_text） |
+| 单元测试 | 27 个（`tests/test_validate_prompt.py`） |
 | 源数据（开发态，不上传） | 5 |
 | 视频时长（源） | 42 分 53 秒 |
 | 视频转录字数（仅本地） | ~12,000 中文字 |
 | 视频转录段数（仅本地） | 371 |
-| 风格预设数 | 10 |
+| 风格预设数 | 15（v0.1 原 10 + v0.2 追加 5） |
 | 提示词模板数 | 4（含完整示例） |
-| 自检规则数 | 8 大类 / 100+ 关键词 |
+| 自检规则数 | 9 大类 / 100+ 关键词 |
 
 ## ✅ 完成状态
 

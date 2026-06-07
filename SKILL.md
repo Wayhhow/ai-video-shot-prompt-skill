@@ -1,6 +1,30 @@
 ---
 name: crafting-ai-video-shot-prompts
-description: 为 AI 视频生成（即梦/Vidu/可灵/小云雀/Sora/Runway 等）编写、评审和润色中文分镜提示词。整合 Mx-Shell《丧尸清道夫》创作者公开的"基础设定/氛围画质/画面内容"三大部分框架与去 AI 味技巧。当用户需要写一个镜头提示词、规划多分镜短剧、为 AI 短片打分、或希望降低生成画面的 AI 痕迹（特别是动作/原子朋克/末日/电影感场景）时调用。
+description: >
+  为 AI 视频生成（即梦/Vidu/可灵/小云雀/Sora/Runway 等）编写、评审和润色中文分镜提示词。
+  整合 Mx-Shell《丧尸清道夫》创作者公开的"基础设定/氛围画质/画面内容"三大部分框架与去 AI 味技巧。
+  当用户需要写一个镜头提示词、规划多分镜短剧、为 AI 短片打分、或希望降低生成画面的 AI 痕迹
+  （特别是动作/原子朋克/末日/电影感场景）时调用。
+  Writes, reviews, and refines Chinese shot-list prompts for AI video generators
+  (即梦/Vidu/可灵/小云雀/Sora/Runway). Encapsulates the three-part
+  "基础设定/氛围画质/画面内容" framework and de-AI-flavor techniques from
+  Mx-Shell's "Zombie Scavenger" methodology. Use when the user wants to write a
+  single shot, plan a multi-shot short, score an AI video script, or reduce AI
+  artifacts (plastic skin, stiff motion, game-CG feel) in action / cinematic /
+  atomic-punk / zombie / wuxia / cyberpunk scenes.
+keywords:
+  - ai video prompt
+  - shot list
+  - chinese
+  - sora
+  - runway
+  - kling
+  - 即梦
+  - vidu
+  - atomic punk
+  - cinematic
+  - action
+  - scoring
 ---
 
 # Crafting AI Video Shot Prompts
@@ -107,12 +131,15 @@ description: 为 AI 视频生成（即梦/Vidu/可灵/小云雀/Sora/Runway 等�
 - ❌ 不加"为什么这样做"——AI 不知道因果链，画面容易崩坏
 - ❌ 完全依赖 AI 写提示词——AI 给的稿还要人工细化分镜/时长/动作细节
 
+> 完整 12 条可勾选质量清单见 [references/prompt-quality-checklist.md](references/prompt-quality-checklist.md)（v0.2 引入）。
+
 ## 配套资源
 
 | 文件 | 用途 |
 | --- | --- |
 | [references/framework.md](references/framework.md) | 三大部分逐项详解 |
 | [references/keyword-library.md](references/keyword-library.md) | 风格/限制/设备/色调关键词库 |
+| [references/prompt-quality-checklist.md](references/prompt-quality-checklist.md) | 写完后的 12 条可勾选质量清单（v0.2 引入） |
 | [references/camera-and-composition.md](references/camera-and-composition.md) | 景别、构图、运镜完整清单与适用场景 |
 | [references/workflow-and-storyboard.md](references/workflow-and-storyboard.md) | 小云雀短剧 Agent 2.0 工作流 + 抽卡策略 |
 | [references/post-production.md](references/post-production.md) | 后期剪辑：动作匹配转场、调色、色彩克隆、速度调整、太阳/旗杆等空间一致性 |

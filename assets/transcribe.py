@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """使用 faster-whisper 对视频音频做中文 ASR 转录。
 
@@ -5,16 +6,17 @@
 - 优先尝试 medium（精度/速度较平衡）；若内存不足自动回退到 small。
 - 量化 int8 节省内存并加速 CPU 推理。
 - 启用 VAD 过滤静音段，减少幻觉与重复。
+
+路径解析（v0.2.0 起）：
+- 通过 --audio / --out-dir 显式传入；或环境变量 AUDIO / TRANSCRIBE_OUT_DIR。
+- 不再硬编码 Windows 路径，跨平台可用。
+- 不传任何参数时，输出 ERROR 并以退出码 2 退出。
 """
 import os
 import sys
 import time
 import json
-
-AUDIO = r"c:\Users\wayhow\Desktop\AI视频提示词\audio_16k_mono.wav"
-OUT_TXT = r"c:\Users\wayhow\Desktop\AI视频提示词\transcript.txt"
-OUT_SRT = r"c:\Users\wayhow\Desktop\AI视频提示词\transcript.srt"
-OUT_JSON = r"c:\Users\wayhow\Desktop\AI视频提示词\transcript.json"
+import argparse
 
 
 def fmt_ts(t: float) -> str:
@@ -41,12 +43,62 @@ def try_model(name: str):
     return model
 
 
-def main():
-    model_name = sys.argv[1] if len(sys.argv) > 1 else "medium"
-    beam = int(sys.argv[2]) if len(sys.argv) > 2 else 5
+def resolve_paths(args: argparse.Namespace) -> dict:
+    """按优先级解析输入/输出路径：CLI > 环境变量 > 错误退出。"""
+    audio = args.audio or os.environ.get("AUDIO")
+    if not audio:
+        print("ERROR: 必须通过 --audio 或环境变量 AUDIO 指定输入音频", file=sys.stderr)
+        print("示例: python assets/transcribe.py --audio /path/to/audio.wav", file=sys.stderr)
+        sys.exit(2)
+    if not os.path.exists(audio):
+        print(f"ERROR: 输入文件不存在: {audio}", file=sys.stderr)
+        sys.exit(2)
 
-    candidates = [model_name]
-    if model_name != "small":
+    out_dir = args.out_dir or os.environ.get("TRANSCRIBE_OUT_DIR") or os.getcwd()
+    os.makedirs(out_dir, exist_ok=True)
+
+    return {
+        "audio": audio,
+        "out_txt": os.path.join(out_dir, "transcript.txt"),
+        "out_srt": os.path.join(out_dir, "transcript.srt"),
+        "out_json": os.path.join(out_dir, "transcript.json"),
+    }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="使用 faster-whisper 对音频做中文 ASR 转录（v0.2.0 起支持跨平台路径）"
+    )
+    parser.add_argument(
+        "--audio",
+        help="输入音频文件路径（也可通过环境变量 AUDIO 传入）",
+    )
+    parser.add_argument(
+        "--out-dir",
+        help="输出目录（也可通过环境变量 TRANSCRIBE_OUT_DIR 传入；默认当前目录）",
+    )
+    parser.add_argument(
+        "--model",
+        default="medium",
+        help="Whisper 模型名（默认 medium；内存不足时自动回退到 small）",
+    )
+    parser.add_argument(
+        "--beam", type=int, default=5,
+        help="beam_size（默认 5）",
+    )
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    paths = resolve_paths(args)
+    AUDIO = paths["audio"]
+    OUT_TXT = paths["out_txt"]
+    OUT_SRT = paths["out_srt"]
+    OUT_JSON = paths["out_json"]
+
+    candidates = [args.model]
+    if args.model != "small":
         candidates.append("small")
 
     model = None
@@ -65,7 +117,7 @@ def main():
     segments, info = model.transcribe(
         AUDIO,
         language="zh",
-        beam_size=beam,
+        beam_size=args.beam,
         vad_filter=True,
         vad_parameters={"min_silence_duration_ms": 500},
         condition_on_previous_text=True,
@@ -100,7 +152,7 @@ def main():
     with open(OUT_TXT, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     with open(OUT_SRT, "w", encoding="utf-8") as f:
-        f.write("\n".join(srt_blocks))
+        f.write(srt_blocks)
     with open(OUT_JSON, "w", encoding="utf-8") as f:
         json.dump({"language": info.language, "duration": info.duration,
                    "segments": json_segments}, f, ensure_ascii=False, indent=2)
