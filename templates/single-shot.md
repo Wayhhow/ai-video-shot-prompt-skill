@@ -95,4 +95,6 @@
 - [ ] 至少 3 个限制词
 - [ ] 景别 / 构图 / 运镜 各选了 1 个
 - [ ] 故事内容用了「怎么做 / 为什么 / 效果」三段式
-- [ ] 总字数在 200-800 中文字之间
+- [ ] 总字数在 100-1500 中文字之间（与 `scripts/validate_prompt.py` 默认区间一致；多分镜可用 `--min-chars 200 --max-chars 3000`）
+
+> 完整 12 条质量清单见 [references/prompt-quality-checklist.md](../references/prompt-quality-checklist.md)（v0.2 引入）。

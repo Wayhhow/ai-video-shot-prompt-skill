@@ -16,7 +16,8 @@
 [![Skill: Trae / Claude](https://img.shields.io/badge/skill-Trae%20%2F%20Claude-blueviolet)](SKILL.md)
 [![Language: 中文](https://img.shields.io/badge/language-中文-red)]()
 [![Inspired by: Mx-Shell](https://img.shields.io/badge/inspired%20by-Mx--Shell-ff69b4)](https://space.bilibili.com/388217494)
-[![Status: v0.1](https://img.shields.io/badge/version-v0.1-orange)](CHANGELOG.md)
+[![Status: v0.2](https://img.shields.io/badge/version-v0.2-orange)](CHANGELOG.md)
+[![CI](https://github.com/Wayhhow/ai-video-shot-prompt-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Wayhhow/ai-video-shot-prompt-skill/actions/workflows/ci.yml)
 [![GitHub Repo stars](https://img.shields.io/github/stars/Wayhhow/ai-video-shot-prompt-skill?style=social)](https://github.com/Wayhhow/ai-video-shot-prompt-skill)
 
 </div>
@@ -144,6 +145,14 @@ python scripts/validate_prompt.py my_prompt.txt
 
 输出会告诉你：三大部分是否齐全 / 是否缺去 AI 味关键词 / 景别构图运镜是否齐备。
 
+### 本地复刻 CI
+
+```bash
+bash scripts/ci_local.sh
+```
+
+一键跑完 8 步检查（pytest + shellcheck + Python 语法 + 3 套模板自检 + 2 个 bash 语法），无需联网即可验证 v0.2 行为不变。
+
 ## 完整示例
 
 仓库里提供 4 套可直接复制的模板：
@@ -153,9 +162,11 @@ python scripts/validate_prompt.py my_prompt.txt
 | 单镜头 | 一镜到底 5–10 秒 | [`templates/single-shot.md`](templates/single-shot.md) |
 | 多分镜 | 2–5 个分镜 8–15 秒 | [`templates/multi-shot.md`](templates/multi-shot.md) |
 | 动作戏 | 打斗 / 追逐 / 战斗 | [`templates/action-scene.md`](templates/action-scene.md) |
-| 风格预设 | 10 种风格打包 | [`templates/style-presets.md`](templates/style-presets.md) |
+| 风格预设 | 15 种风格打包（v0.2 追加 5 套） | [`templates/style-presets.md`](templates/style-presets.md) |
 
-10 种风格预设（可直接整段复制到提示词）：
+15 种风格预设（可直接整段复制到提示词）：
+
+**v0.1 原 10 套**：
 
 - 原子朋克 + 末日丧尸（《丧尸清道夫》原片）
 - 电影动作（爆炸、追车）
@@ -167,6 +178,14 @@ python scripts/validate_prompt.py my_prompt.txt
 - 国产爱死机（视频原话标签）
 - 喜剧荒诞（夸张、反差）
 - 监控 / 恐怖（POV、心理惊悚）
+
+**v0.2 追加 5 套**：
+
+- 机甲 / 机甲战（科幻、末世战争）
+- 古风 / 国风（武侠、宫廷、田园）
+- 港片 / 霓虹九龙（黑帮、市井、悬疑）
+- 北欧冷调（极简、心理、北欧 noir）
+- 复古港片 80s（怀旧、致敬、茶餐厅）
 
 ## 仓库结构
 
@@ -222,8 +241,8 @@ crafting-ai-video-shot-prompts/
 
 ## 路线图
 
-- [ ] v0.1 — 三大部分框架 + 4 模板 + 自检脚本
-- [ ] v0.2 — 5 套新风格预设（机甲 / 古风 / 港片 / 北欧冷调 / 复古港片）
+- [x] v0.1 — 三大部分框架 + 4 模板 + 自检脚本（2026-06）
+- [x] v0.2 — 5 套新风格预设（机甲 / 古风 / 港片 / 北欧冷调 / 复古港片）+ 跨平台脚本 + pytest + CI（2026-06-07）
 - [ ] v0.3 — 多分镜节奏自动分配（输入 N 个分镜 + 总时长 → 自动计算每镜时长）
 - [ ] v0.4 — 提示词质量评分（LLM-as-judge，输出 0-100 分与改进建议）
 - [ ] v1.0 — 与主流 AI 视频平台 API 对接，一键生成

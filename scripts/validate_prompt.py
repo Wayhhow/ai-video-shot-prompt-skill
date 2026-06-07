@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-提示词结构自检工具
+提示词结构自检工具（v0.2.0 升级）
 
 检查一个 AI 视频提示词是否符合"基础设定 / 氛围画质 / 画面内容"三大部分框架，
 以及是否包含去 AI 味关键词、景别/构图/运镜、参考图描述等关键要素。
+
+v0.2.0 行为变更（BREAKING）：
+- 三大段标题必须用【】精确包裹（不再接受"基础设定：xxx"无【】写法）
+- 新增三大段顺序校验（基础设定 → 氛围画质 → 画面内容）
+- 参考图描述正则加固（接受"参考图描述："、"参考图："、"参考图" + 换行/冒号）
+- 字数上下限改为 CLI 参数 --min-chars / --max-chars（默认 100/1500 保持不变）
+- --strict 模式下：顺序错乱会与非空 issues 一起返回非零退出码
 
 Usage:
     python validate_prompt.py <prompt_file>
     python validate_prompt.py <prompt_file> --strict
     cat prompt.txt | python validate_prompt.py -
+    python validate_prompt.py prompt.txt --min-chars 200 --max-chars 2000
 
 Exit codes:
     0 = 通过（或警告）
@@ -36,12 +44,14 @@ FAIL = "[X]"
 WARN = "[!]"
 
 
-# 三大段标记（必须存在）
-REQUIRED_SECTIONS = [
-    ("基础设定", ["基础设定", "设定"]),
-    ("氛围画质", ["氛围画质", "画质", "氛围"]),
-    ("画面内容", ["画面内容", "画面", "内容"]),
-]
+# v0.2.0 BREAKING: 三大段标题必须用【】精确包裹，且允许半角空格变体
+# 不再接受"基础设定：xxx"等无【】的写法，避免"设定"在任意上下文误匹配
+SECTION_PATTERNS = {
+    "基础设定": re.compile(r"【\s*基础设定\s*】"),
+    "氛围画质": re.compile(r"【\s*氛围画质\s*】"),
+    "画面内容": re.compile(r"【\s*画面内容\s*】"),
+}
+SECTION_ORDER = ["基础设定", "氛围画质", "画面内容"]
 
 # 关键要素
 DEAI_KEYWORDS = ["超写实", "极致逼真", "真人实景拍摄"]  # 至少 1 个
@@ -49,9 +59,9 @@ SHOT_SIZES = ["特写", "近景", "中景", "远景", "全景", "微距", "广�
 COMPOSITIONS = ["三分线", "黄金分割", "对角线", "引导线", "荷兰角", "对称", "框架式"]
 CAMERA_MOVES = ["推", "拉", "摇", "移", "跟", "固定", "手持", "环绕", "仰拍", "俯拍", "航拍", "变焦"]
 
-# 推荐字数范围
-MIN_CHARS = 100
-MAX_CHARS = 1500
+# 字数默认上下限（可通过 CLI 覆盖）
+DEFAULT_MIN_CHARS = 100
+DEFAULT_MAX_CHARS = 1500
 
 
 def load_prompt(path_or_dash: str) -> str:
@@ -68,11 +78,35 @@ def has_any(text: str, keywords: list) -> list:
     return [k for k in keywords if k in text]
 
 
-def check_sections(text: str) -> dict:
-    result = {}
-    for name, aliases in REQUIRED_SECTIONS:
-        result[name] = any(a in text for a in aliases)
-    return result
+def find_section_positions(text: str) -> dict:
+    """返回每个大节在文本中首次出现的位置（字符 offset）。未找到则不在 dict 中。"""
+    positions = {}
+    for name, pat in SECTION_PATTERNS.items():
+        m = pat.search(text)
+        if m:
+            positions[name] = m.start()
+    return positions
+
+
+def check_sections(text: str) -> tuple:
+    """检查三大段是否齐全 + 顺序是否正确。返回 (sections_dict, order_ok, ordered_names)。
+
+    ordered_names 是按出现位置（offset）排序的，便于在警告中显示真实顺序。
+    order_ok 的判定：按 SECTION_ORDER 排列的位置必须严格递增（即必须 基础设定 < 氛围画质 < 画面内容）。
+    """
+    positions = find_section_positions(text)
+    sections = {name: (name in positions) for name in SECTION_ORDER}
+    # 按真实出现位置排序
+    ordered_names = sorted(positions.keys(), key=lambda n: positions[n])
+
+    # 顺序检查：按 SECTION_ORDER 排列时，positions 应严格递增
+    canonical_present = [n for n in SECTION_ORDER if n in positions]
+    if len(canonical_present) >= 2:
+        canonical_positions = [positions[n] for n in canonical_present]
+        order_ok = canonical_positions == sorted(canonical_positions)
+    else:
+        order_ok = True  # 只有一个或零个段时不做顺序判断
+    return sections, order_ok, ordered_names
 
 
 def check_deai(text: str) -> list:
@@ -92,10 +126,15 @@ def check_camera_move(text: str) -> list:
 
 
 def has_reference_image_desc(text: str) -> bool:
-    """检查参考图描述是否存在。"""
-    has_keyword = "参考图" in text or "参考" in text
-    has_description = bool(re.search(r"参考图.{0,8}[:：]", text)) or "参考图描述" in text
-    return has_keyword and has_description
+    """v0.2.0 加固：同时匹配『参考图描述：xxx』『参考图：xxx』『参考图: xxx』及换行后描述。
+    要求 30 字符内至少 4 个中文字（避免「参考图: 空白」误报通过）。
+    """
+    patterns = [
+        r"参考图描述\s*[:：][\s\S]{0,80}?[\u4e00-\u9fff]{4,}",
+        r"参考图\s*[:：][\s\S]{0,80}?[\u4e00-\u9fff]{4,}",
+        r"参考图\s*\n[\s\S]{0,80}?[\u4e00-\u9fff]{4,}",
+    ]
+    return any(re.search(p, text) for p in patterns)
 
 
 def check_sound_limit(text: str) -> bool:
@@ -112,7 +151,18 @@ def main():
     parser = argparse.ArgumentParser(description="AI 视频提示词结构自检")
     parser.add_argument("input", help="提示词文件路径，或 - 表示从 stdin 读取")
     parser.add_argument("--strict", action="store_true", help="严格模式：任何缺失都返回非零退出码")
+    parser.add_argument("--min-chars", type=int, default=DEFAULT_MIN_CHARS,
+                        help=f"最小中文字数（默认 {DEFAULT_MIN_CHARS}）")
+    parser.add_argument("--max-chars", type=int, default=DEFAULT_MAX_CHARS,
+                        help=f"最大中文字数（默认 {DEFAULT_MAX_CHARS}）")
     args = parser.parse_args()
+
+    if args.min_chars < 0 or args.max_chars < 0:
+        print("ERROR: --min-chars / --max-chars 必须为非负整数", file=sys.stderr)
+        sys.exit(2)
+    if args.min_chars > args.max_chars:
+        print("ERROR: --min-chars 不能大于 --max-chars", file=sys.stderr)
+        sys.exit(2)
 
     try:
         text = load_prompt(args.input)
@@ -128,8 +178,8 @@ def main():
     warnings = []
     passes = []
 
-    # 1. 三大段
-    sections = check_sections(text)
+    # 1. 三大段（含顺序校验）
+    sections, order_ok, ordered_names = check_sections(text)
     print("\n【1. 三大段结构】")
     for name, ok in sections.items():
         mark = OK if ok else FAIL
@@ -138,6 +188,13 @@ def main():
             passes.append(f"三大段-{name}")
         else:
             issues.append(f"三大段缺失: {name}")
+    if all(sections.values()) and not order_ok:
+        msg = "三大段顺序错乱，建议按 基础设定 → 氛围画质 → 画面内容 顺序"
+        print(f"  {WARN} {msg}（当前实际顺序: {' → '.join(ordered_names)}）")
+        if args.strict:
+            issues.append(msg)
+        else:
+            warnings.append(msg)
 
     # 2. 去 AI 味关键词
     print("\n【2. 去 AI 味关键词（强制）】")
@@ -156,7 +213,7 @@ def main():
         passes.append("参考图描述")
     else:
         print(f"  {WARN} 未发现「参考图描述」字段")
-        warnings.append("建议添加参考图描述（即使是虚拟参考图）")
+        warnings.append("建议添加参考图描述（即使是虚拟参考图）；格式：参考图描述：<1-2 句内容>")
 
     # 4. 声音限制
     print("\n【4. 声音限制】")
@@ -201,14 +258,14 @@ def main():
     print("\n【8. 字数】")
     cn_chars = count_chars(text)
     print(f"  中文字符数: {cn_chars}")
-    if cn_chars < MIN_CHARS:
-        print(f"  {WARN} 字数偏少（建议 >= {MIN_CHARS}）")
-        warnings.append(f"字数 {cn_chars} < {MIN_CHARS}")
-    elif cn_chars > MAX_CHARS:
-        print(f"  {WARN} 字数偏多（建议 <= {MAX_CHARS}，过多会分散 AI 注意力）")
-        warnings.append(f"字数 {cn_chars} > {MAX_CHARS}")
+    if cn_chars < args.min_chars:
+        print(f"  {WARN} 字数偏少（建议 >= {args.min_chars}）")
+        warnings.append(f"字数 {cn_chars} < {args.min_chars}")
+    elif cn_chars > args.max_chars:
+        print(f"  {WARN} 字数偏多（建议 <= {args.max_chars}，过多会分散 AI 注意力）")
+        warnings.append(f"字数 {cn_chars} > {args.max_chars}")
     else:
-        print(f"  {OK} 字数合理")
+        print(f"  {OK} 字数合理（区间 {args.min_chars}-{args.max_chars}）")
         passes.append("字数")
 
     # 9. 总结
