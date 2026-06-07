@@ -50,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 基线（v0.1.0 行为）输出保存在 `docs/baseline-v0.1.txt`，便于 v0.2 行为对照
 - 5 套新风格预设的关键词已并入 `references/keyword-library.md`
 - 本版本不重写方法论本体，仅在末尾追加新预设与新检查项
+- **PR 描述**：[docs/PR_v0.2.0.md](../docs/PR_v0.2.0.md)（完整动机 / Changes / Test Matrix / 升级指引）
+- **下阶段路线**：[docs/NEXT_STEPS.md](../docs/NEXT_STEPS.md)（v0.3 多分镜分配 / v0.4 LLM-as-judge / v1.0 平台 API）
 
 ## [0.1.0] - 2026-06
 

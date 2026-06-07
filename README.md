@@ -145,6 +145,14 @@ python scripts/validate_prompt.py my_prompt.txt
 
 输出会告诉你：三大部分是否齐全 / 是否缺去 AI 味关键词 / 景别构图运镜是否齐备。
 
+### 本地复刻 CI
+
+```bash
+bash scripts/ci_local.sh
+```
+
+一键跑完 8 步检查（pytest + shellcheck + Python 语法 + 3 套模板自检 + 2 个 bash 语法），无需联网即可验证 v0.2 行为不变。
+
 ## 完整示例
 
 仓库里提供 4 套可直接复制的模板：
