@@ -276,6 +276,10 @@ crafting-ai-video-shot-prompts/
 
 完整引用边界与不在仓库中的内容清单：[`CREDITS.md`](CREDITS.md)
 
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Wayhhow/ai-video-shot-prompt-skill&type=Date)](https://star-history.com/#Wayhhow/ai-video-shot-prompt-skill&Date)
+
 ## 许可
 
 - **本 skill 代码与文档**：[MIT License](LICENSE)
