@@ -3,11 +3,13 @@
 # 用法：
 #   .\install.ps1                                    # 安装到默认路径
 #   .\install.ps1 -DestDir "C:\my\skills\foo"      # 安装到自定义路径
+#   .\install.ps1 -Force                             # 目标目录非空时跳过确认，直接覆盖安装
 #
 # 兼容：Windows PowerShell 5.1+ / PowerShell Core 7+
 [CmdletBinding()]
 param(
-    [string]$DestDir
+    [string]$DestDir,
+    [switch]$Force
 )
 
 # 解析脚本所在目录
@@ -25,9 +27,25 @@ if ([string]::IsNullOrEmpty($DestDir) -or $DestDir -eq "\" -or $DestDir -eq "/")
 }
 
 # 防止把脚本装到自己头上
-if ((Resolve-Path $src).Path -eq (Resolve-Path $DestDir).Path) {
+# 用 GetFullPath 而非 Resolve-Path：目标目录尚不存在时 Resolve-Path 会报错
+$srcFull = [IO.Path]::GetFullPath($src).TrimEnd('\', '/')
+$dstFull = [IO.Path]::GetFullPath($DestDir).TrimEnd('\', '/')
+if ($srcFull -ieq $dstFull) {
     Write-Error "ERROR: 源目录与目标目录相同: $src"
     exit 2
+}
+
+# 目标目录已存在且非空：默认要求确认，防止误选重要目录导致同名文件被覆盖
+if ((Test-Path $DestDir) -and (Get-ChildItem -Path $DestDir -Force -ErrorAction SilentlyContinue | Select-Object -First 1)) {
+    if (-not $Force) {
+        Write-Host "WARN: 目标目录已存在且非空: $DestDir" -ForegroundColor Yellow
+        Write-Host "      同名文件将被覆盖。如确认无误请输入 yes；或用 -Force 跳过本确认。"
+        $ans = Read-Host "继续安装? [yes/N]"
+        if ($ans -ne "yes") {
+            Write-Error "已取消安装。"
+            exit 3
+        }
+    }
 }
 
 # 确保目标存在

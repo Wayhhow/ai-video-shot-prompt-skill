@@ -86,6 +86,10 @@ def parse_args() -> argparse.Namespace:
         "--beam", type=int, default=5,
         help="beam_size（默认 5）",
     )
+    parser.add_argument(
+        "--language", default="zh",
+        help="识别语言代码（默认 zh；传 auto 让模型自动检测语言）",
+    )
     return parser.parse_args()
 
 
@@ -96,6 +100,11 @@ def main():
     OUT_TXT = paths["out_txt"]
     OUT_SRT = paths["out_srt"]
     OUT_JSON = paths["out_json"]
+
+    # faster-whisper 会把整段音频解码进内存，超大文件可能耗尽内存，提前提示
+    size_mb = os.path.getsize(AUDIO) / (1024 * 1024)
+    if size_mb > 500:
+        print(f"[warn] 输入音频约 {size_mb:.0f}MB，解码后内存占用较大，建议先切分或压缩音频", flush=True)
 
     candidates = [args.model]
     if args.model != "small":
@@ -112,16 +121,20 @@ def main():
         print("FATAL: no model loaded", file=sys.stderr)
         sys.exit(1)
 
+    lang = None if args.language.strip().lower() in ("auto", "none") else args.language
+    # 中文 initial_prompt 仅在中文识别时注入，避免干扰其他语言
+    zh_prompt = "以下是普通话视频文案，可能涉及AI创作、影视制作、剧本、绘画、分镜等话题。"
+
     print(f"[asr] start: {AUDIO}", flush=True)
     t0 = time.time()
     segments, info = model.transcribe(
         AUDIO,
-        language="zh",
+        language=lang,
         beam_size=args.beam,
         vad_filter=True,
         vad_parameters={"min_silence_duration_ms": 500},
         condition_on_previous_text=True,
-        initial_prompt="以下是普通话视频文案，可能涉及AI创作、影视制作、剧本、绘画、分镜等话题。",
+        initial_prompt=zh_prompt if lang == "zh" else None,
     )
     print(f"[asr] language={info.language} prob={info.language_probability:.3f} duration={info.duration:.1f}s", flush=True)
 
@@ -130,10 +143,11 @@ def main():
     json_segments = []
     n = 0
     for seg in segments:
-        n += 1
         text = seg.text.strip()
         if not text:
             continue
+        # 跳过空文本段后再自增，保证 SRT 序号连续（严格解析器要求 1,2,3...）
+        n += 1
         ts = fmt_ts(seg.start)
         lines.append(f"[{ts}] {text}")
         srt_blocks.append(f"{n}\n{fmt_srt_ts(seg.start)} --> {fmt_srt_ts(seg.end)}\n{text}\n")
@@ -152,7 +166,9 @@ def main():
     with open(OUT_TXT, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     with open(OUT_SRT, "w", encoding="utf-8") as f:
-        f.write(srt_blocks)
+        # 每个 block 已以 \n 结尾，用 \n 连接即得到 SRT 块间空行；
+        # 注意 f.write 不接受 list，必须先 join
+        f.write("\n".join(srt_blocks))
     with open(OUT_JSON, "w", encoding="utf-8") as f:
         json.dump({"language": info.language, "duration": info.duration,
                    "segments": json_segments}, f, ensure_ascii=False, indent=2)

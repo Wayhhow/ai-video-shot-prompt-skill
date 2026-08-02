@@ -76,10 +76,23 @@ def main():
     SRC, DST = resolve_paths(args)
     GAP = args.gap
 
-    with open(SRC, encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(SRC, encoding="utf-8") as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"ERROR: JSON 解析失败: {SRC}（{e}）", file=sys.stderr)
+        sys.exit(2)
+    except OSError as e:
+        print(f"ERROR: 无法读取输入文件: {SRC}（{e}）", file=sys.stderr)
+        sys.exit(2)
 
+    if not isinstance(data, dict) or "segments" not in data:
+        print(f"ERROR: {SRC} 缺少 'segments' 字段（应传入 transcribe.py 生成的 transcript.json）", file=sys.stderr)
+        sys.exit(2)
     segs = data["segments"]
+    if not isinstance(segs, list):
+        print(f"ERROR: {SRC} 中 'segments' 不是列表", file=sys.stderr)
+        sys.exit(2)
     paragraphs = []
     buf = []
     last_end = None

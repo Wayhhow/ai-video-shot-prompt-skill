@@ -27,12 +27,18 @@ Trae IDE 默认从以下位置发现 skill：
 
 # Windows PowerShell 自定义目标
 .\install.ps1 -DestDir "C:\my\skills\foo"
+
+# 目标目录已存在且非空时，脚本会先要求确认；确认要覆盖可用 --force / -Force 跳过确认
+./install.sh --force
+.\install.ps1 -Force
 ```
 
 脚本会：
 - 自动跳过 `.git/` 目录
 - 把仓库所有内容（含隐藏文件 `.github/`、`.gitignore`、`.trae/` 等）复制到目标
 - 防止目标目录是 `/` 或源目录本身（保护性检查）
+- 目标目录已存在且非空时提示确认，防止误覆盖重要目录（`--force` / `-Force` 可跳过）
+- 通过软链接调用 install.sh 时也能正确定位仓库真实路径
 - 打印"下一步"指引
 
 ## 方法 2：手动复制
