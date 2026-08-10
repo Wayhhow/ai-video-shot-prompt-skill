@@ -278,7 +278,13 @@ crafting-ai-video-shot-prompts/
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Wayhhow/ai-video-shot-prompt-skill&type=Date)](https://star-history.com/#Wayhhow/ai-video-shot-prompt-skill&Date)
+<a href="https://www.star-history.com/?repos=Wayhhow%2Fai-video-shot-prompt-skill&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Wayhhow/ai-video-shot-prompt-skill&type=date&theme=dark&legend=top-left&sealed_token=XIU3qaNwDCfnmW3XTySw-zjTwfE9Mn-NHQp4NTezKy4Hp4ZNh-EAejrvdCVZnKJj52TW9R6p1PaA2Lo-vlshZGC1IBSKAB_msWc9dHMWMp35H0rHKQc8Lg" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Wayhhow/ai-video-shot-prompt-skill&type=date&legend=top-left&sealed_token=XIU3qaNwDCfnmW3XTySw-zjTwfE9Mn-NHQp4NTezKy4Hp4ZNh-EAejrvdCVZnKJj52TW9R6p1PaA2Lo-vlshZGC1IBSKAB_msWc9dHMWMp35H0rHKQc8Lg" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Wayhhow/ai-video-shot-prompt-skill&type=date&legend=top-left&sealed_token=XIU3qaNwDCfnmW3XTySw-zjTwfE9Mn-NHQp4NTezKy4Hp4ZNh-EAejrvdCVZnKJj52TW9R6p1PaA2Lo-vlshZGC1IBSKAB_msWc9dHMWMp35H0rHKQc8Lg" />
+ </picture>
+</a>
 
 ## 许可
 
