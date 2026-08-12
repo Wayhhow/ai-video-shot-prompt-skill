@@ -197,7 +197,7 @@ One command runs 8 checks (pytest + shellcheck + Python syntax + 3 template self
 ## Project Structure
 
 ```
-crafting-ai-video-shot-prompts/
+crafting-ai-video-shot-prompt-skill/
 ├── cover.jpg                        # Cover image
 ├── SKILL.md                         # Entry: triggers + workflow + quick ref
 ├── README.md                        # Chinese readme (canonical)
@@ -213,6 +213,7 @@ crafting-ai-video-shot-prompts/
 │   ├── camera-and-composition.md    # Shot / composition / movement checklist
 │   ├── workflow-and-storyboard.md   # 即梦 workflow + card-draw strategy
 │   ├── post-production.md           # Post-production: edit, grade, consistency
+│   ├── prompt-quality-checklist.md  # 12-item quality checklist
 │   └── examples.md                  # Full examples (ostrich / robot / villa)
 ├── templates/                       # 4 prompt templates (Chinese, keyword-native)
 │   ├── single-shot.md
@@ -222,8 +223,12 @@ crafting-ai-video-shot-prompts/
 ├── scripts/
 │   └── validate_prompt.py           # Prompt structure self-check
 ├── .github/
-│   ├── workflows/ci.yml             # CI: pytest across Python 3.9–3.13
+│   ├── workflows/
+│   │   └── ci.yml                   # CI: pytest across Python 3.9–3.13
 │   ├── ISSUE_TEMPLATE/              # Bug report / feature request templates
+│   │   ├── bug_report.yml
+│   │   ├── feature_request.yml
+│   │   └── config.yml
 │   └── PULL_REQUEST_TEMPLATE.md     # PR template
 └── assets/                          # Utility scripts
     ├── transcribe.py                # Transcribe source Bilibili video
