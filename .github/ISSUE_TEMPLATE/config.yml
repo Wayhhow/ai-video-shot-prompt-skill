@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/Wayhhow/ai-video-shot-prompt-skill/discussions
+    about: Please ask questions or start discussions here rather than opening an issue
+  - name: Documentation
+    url: https://github.com/Wayhhow/ai-video-shot-prompt-skill/blob/main/README.en.md
+    about: Check the documentation for usage guides and examples

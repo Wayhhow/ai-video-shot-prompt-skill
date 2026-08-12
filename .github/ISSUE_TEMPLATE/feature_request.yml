@@ -1,0 +1,78 @@
+name: Feature Request
+description: Suggest a new feature, improvement, or style preset
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please tell us about your idea and the problem it solves.
+
+  - type: input
+    id: title
+    attributes:
+      label: Feature Title
+      description: A clear, concise title for your feature request
+      placeholder: "e.g., Add Studio Ghibli animation style preset"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Describe the feature you'd like to see
+      placeholder: "Tell us about this feature. What should it do? How should it work?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case / Motivation
+      description: What problem does this solve? What's the use case?
+      placeholder: |
+        - Who would benefit from this feature?
+        - What kind of videos would this help create?
+        - Why is this feature important?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: If you have an idea for how this could be implemented, describe it here
+      placeholder: |
+        For style presets, include:
+        - Style core keywords (3-5)
+        - De-AI-flavor keywords (2-3)
+        - Constraint words (3-5)
+        - Base equipment
+        - Atmosphere description
+        - Color grade
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: "Describe any alternative approaches you've thought about"
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you willing to contribute this feature?
+      description: Let us know if you'd like to help implement this
+      options:
+        - "Yes, I can submit a PR"
+        - "Yes, but I need guidance"
+        - "No, I'm just suggesting"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, examples, or references
+      placeholder: "Links to similar features, reference images, example prompts, etc."

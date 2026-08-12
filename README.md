@@ -2,6 +2,8 @@
 
 # Crafting AI Video Shot Prompts
 
+**[中文](README.md) | [English](README.en.md)**
+
 **为 AI 视频生成（即梦 / Vidu / 可灵 / 小云雀 / Sora / Runway）编写去 AI 味的中文分镜提示词。**
 
 > 一套把"原子朋克丧尸清道夫"风格方法论，封装成可复用 Agent Skill 的提示词工程工作流。
@@ -249,7 +251,11 @@ crafting-ai-video-shot-prompts/
 
 ## 贡献
 
-欢迎 PR ！优先方向：
+欢迎 PR ！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详细的贡献指南。
+
+参与本项目的所有人都需遵守 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+
+优先贡献方向：
 
 1. **更多风格预设**（不同题材）
 2. **多语言支持**（英文 prompt 输出）

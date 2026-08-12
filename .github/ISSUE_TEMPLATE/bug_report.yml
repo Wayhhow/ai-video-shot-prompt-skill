@@ -1,0 +1,100 @@
+name: Bug Report
+description: Report a problem with the prompt skill, scripts, or documentation
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible.
+
+  - type: input
+    id: title
+    attributes:
+      label: Bug Title
+      description: A clear, concise summary of the bug
+      placeholder: "e.g., validate_prompt.py incorrectly flags valid 【基础设定】 as missing"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of what the bug is
+      placeholder: "What happened? What did you expect to happen?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Run `python scripts/validate_prompt.py my_prompt.txt`
+        2. The script reports "基础设定 missing"
+        3. But the prompt clearly contains 【基础设定】 section
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "The script should recognize the 【基础设定】 section and pass validation."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: "The script exits with code 1 and reports 基础设定 as missing."
+    validations:
+      required: true
+
+  - type: textarea
+    id: prompt_content
+    attributes:
+      label: Prompt Content (if applicable)
+      description: If the bug relates to prompt validation, paste the prompt content here
+      placeholder: "Paste your prompt text here (or attach a file)"
+      render: text
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running?
+      placeholder: "e.g., Windows 11, macOS 14, Ubuntu 22.04"
+
+  - type: input
+    id: python_version
+    attributes:
+      label: Python Version
+      description: What Python version are you using?
+      placeholder: "e.g., 3.11.5"
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: AI Video Platform
+      description: Which AI video platform are you targeting?
+      options:
+        - 即梦 (Jimeng)
+        - Vidu
+        - 可灵 (Kling)
+        - 小云雀 (Xiaoyunque)
+        - Sora
+        - Runway
+        - Veo
+        - Other / Not applicable
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or relevant information
+      placeholder: "Any other details that might help us investigate"
