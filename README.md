@@ -31,7 +31,7 @@
 `crafting-ai-video-shot-prompts` 是一个 **Claude / Trae IDE 的 Agent Skill**，
 专门为 AI 视频生成模型编写**有电影感、没塑料感**的中文分镜提示词。
 
-它把 B 站百万播放 UP 主 [Mx-Shell（刘紫鱼）](https://space.bilibili.com/388217494)
+它把 B 站百万播放 UP 主 [Mx-Shell（刘梓瑜）](https://space.bilibili.com/388217494)
 在《丧尸清道夫》创作分享中公开的方法论，封装为：
 
 - ✅ 一套**三大部分**固定顺序的提示词结构
