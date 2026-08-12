@@ -197,6 +197,43 @@ One command runs 8 checks (pytest + shellcheck + Python syntax + 3 template self
 ## Project Structure
 
 ```
+crafting-ai-video-shot-prompt-skill/
+├── cover.jpg                        # Cover image
+├── SKILL.md                         # Entry: triggers + workflow + quick ref
+├── README.md                        # Chinese readme (canonical)
+├── README.en.md                     # This file — English readme
+├── CREDITS.md                       # Credits and attribution
+├── LICENSE                          # MIT + third-party attribution
+├── CONTRIBUTING.md                  # How to contribute
+├── CODE_OF_CONDUCT.md               # Community code of conduct
+├── INSTALL.md                       # Detailed installation
+├── references/                      # Detailed reference (Chinese, loaded on demand)
+│   ├── framework.md                 # Three-part framework deep-dive
+│   ├── keyword-library.md           # 200+ keyword library
+│   ├── camera-and-composition.md    # Shot / composition / movement checklist
+│   ├── workflow-and-storyboard.md   # 即梦 workflow + card-draw strategy
+│   ├── post-production.md           # Post-production: edit, grade, consistency
+│   ├── prompt-quality-checklist.md  # 12-item quality checklist
+│   └── examples.md                  # Full examples (ostrich / robot / villa)
+├── templates/                       # 4 prompt templates (Chinese, keyword-native)
+│   ├── single-shot.md
+│   ├── multi-shot.md
+│   ├── action-scene.md
+│   └── style-presets.md
+├── scripts/
+│   └── validate_prompt.py           # Prompt structure self-check
+├── .github/
+│   ├── workflows/
+│   │   └── ci.yml                   # CI: pytest across Python 3.9–3.13
+│   ├── ISSUE_TEMPLATE/              # Bug report / feature request templates
+│   │   ├── bug_report.yml
+│   │   ├── feature_request.yml
+│   │   └── config.yml
+│   └── PULL_REQUEST_TEMPLATE.md     # PR template
+└── assets/                          # Utility scripts
+    ├── transcribe.py                # Transcribe source Bilibili video
+    └── merge_text.py                # Merge transcript paragraphs
+```
 crafting-ai-video-shot-prompts/
 ├── cover.jpg                        # Cover image
 ├── SKILL.md                         # Entry: triggers + workflow + quick ref

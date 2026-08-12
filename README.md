@@ -192,6 +192,43 @@ bash scripts/ci_local.sh
 ## 仓库结构
 
 ```
+crafting-ai-video-shot-prompt-skill/
+├── cover.jpg                        # README 顶部封面图
+├── SKILL.md                        # 主入口：触发条件 + 工作流 + 速查
+├── README.md                       # 本文件（中文）
+├── README.en.md                    # English readme
+├── CREDITS.md                      # 致谢与引用列表
+├── LICENSE                         # MIT + 第三方归属声明
+├── CONTRIBUTING.md                 # 贡献指南
+├── CODE_OF_CONDUCT.md              # 行为准则
+├── INSTALL.md                      # 安装详解
+├── references/                     # 详细参考（按需加载）
+│   ├── framework.md                # 三大部分详解
+│   ├── keyword-library.md          # 200+ 关键词库
+│   ├── camera-and-composition.md   # 景别/构图/运镜清单
+│   ├── workflow-and-storyboard.md  # 小云雀工作流 + 抽卡策略
+│   ├── post-production.md          # 后期剪辑技巧
+│   ├── prompt-quality-checklist.md # 12 条可勾选质量清单
+│   └── examples.md                 # 完整示例（鸵鸟/机器人/别墅）
+├── templates/                      # 4 套提示词模板
+│   ├── single-shot.md
+│   ├── multi-shot.md
+│   ├── action-scene.md
+│   └── style-presets.md
+├── scripts/
+│   └── validate_prompt.py          # 提示词结构自检
+├── .github/
+│   ├── workflows/
+│   │   └── ci.yml                  # CI: pytest across Python 3.9–3.13
+│   ├── ISSUE_TEMPLATE/             # Issue 模板
+│   │   ├── bug_report.yml
+│   │   ├── feature_request.yml
+│   │   └── config.yml
+│   └── PULL_REQUEST_TEMPLATE.md    # PR 模板
+└── assets/                         # 工具脚本（不包含视频素材）
+    ├── transcribe.py               # 自行从 B 站下载源视频后转录
+    └── merge_text.py               # 转录段落合并
+```
 crafting-ai-video-shot-prompts/
 ├── cover.jpg                        # README 顶部封面图
 ├── SKILL.md                        # 主入口：触发条件 + 工作流 + 速查
