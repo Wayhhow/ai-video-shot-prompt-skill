@@ -1,3 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crafting-ai-video-shot-prompts"
+version = "0.2.0"
+description = "Agent Skill for crafting Chinese AI video shot prompts"
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "PyYAML>=6",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

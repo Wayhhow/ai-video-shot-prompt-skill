@@ -12,19 +12,20 @@ description: >
   single shot, plan a multi-shot short, score an AI video script, or reduce AI
   artifacts (plastic skin, stiff motion, game-CG feel) in action / cinematic /
   atomic-punk / zombie / wuxia / cyberpunk scenes.
-keywords:
-  - ai video prompt
-  - shot list
-  - chinese
-  - sora
-  - runway
-  - kling
-  - 即梦
-  - vidu
-  - atomic punk
-  - cinematic
-  - action
-  - scoring
+metadata:
+  keywords:
+    - ai video prompt
+    - shot list
+    - chinese
+    - sora
+    - runway
+    - kling
+    - 即梦
+    - vidu
+    - atomic punk
+    - cinematic
+    - action
+    - scoring
 ---
 
 # Crafting AI Video Shot Prompts

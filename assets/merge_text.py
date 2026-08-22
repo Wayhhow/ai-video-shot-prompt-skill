@@ -12,6 +12,7 @@ import json
 import sys
 import os
 import argparse
+import math
 
 
 def parse_args() -> argparse.Namespace:
@@ -60,6 +61,30 @@ def resolve_paths(args: argparse.Namespace) -> tuple:
     return src, dst
 
 
+def validate_segments(segs: list) -> None:
+    if not isinstance(segs, list):
+        raise ValueError("segments 必须是列表")
+    for index, segment in enumerate(segs):
+        if not isinstance(segment, dict):
+            raise ValueError(f"segment[{index}] 必须是对象")
+        missing = [key for key in ("start", "end", "text") if key not in segment]
+        if missing:
+            raise ValueError(f"segment[{index}] 缺少字段: {', '.join(missing)}")
+        if not isinstance(segment["text"], str):
+            raise ValueError(f"segment[{index}].text 必须是字符串")
+        if (
+            isinstance(segment["start"], bool)
+            or isinstance(segment["end"], bool)
+            or not isinstance(segment["start"], (int, float))
+            or not isinstance(segment["end"], (int, float))
+            or not math.isfinite(segment["start"])
+            or not math.isfinite(segment["end"])
+        ):
+            raise ValueError(f"segment[{index}] 的 start/end 必须是数字")
+        if segment["start"] < 0 or segment["end"] < segment["start"]:
+            raise ValueError(f"segment[{index}] 的时间范围无效")
+
+
 def fix_punct(s: str) -> str:
     # 中文标点后不补空格；英文/数字前后补空格
     s = re.sub(r"([\u4e00-\u9fff])([A-Za-z0-9])", r"\1 \2", s)
@@ -73,6 +98,9 @@ def fix_punct(s: str) -> str:
 
 def main():
     args = parse_args()
+    if args.gap < 0:
+        print("ERROR: gap 必须为非负数", file=sys.stderr)
+        sys.exit(2)
     SRC, DST = resolve_paths(args)
     GAP = args.gap
 
@@ -90,8 +118,10 @@ def main():
         print(f"ERROR: {SRC} 缺少 'segments' 字段（应传入 transcribe.py 生成的 transcript.json）", file=sys.stderr)
         sys.exit(2)
     segs = data["segments"]
-    if not isinstance(segs, list):
-        print(f"ERROR: {SRC} 中 'segments' 不是列表", file=sys.stderr)
+    try:
+        validate_segments(segs)
+    except ValueError as e:
+        print(f"ERROR: {SRC} 输入格式无效: {e}", file=sys.stderr)
         sys.exit(2)
     paragraphs = []
     buf = []
@@ -103,6 +133,8 @@ def main():
         if last_end is not None and (s["start"] - last_end) > GAP and buf:
             paragraphs.append("".join(buf))
             buf = []
+        if buf and re.match(r"^[A-Za-z0-9]", text) and re.search(r"[A-Za-z0-9]$", buf[-1]):
+            buf.append(" ")
         buf.append(text)
         last_end = s["end"]
     if buf:
