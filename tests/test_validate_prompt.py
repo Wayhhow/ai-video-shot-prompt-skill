@@ -232,6 +232,25 @@ def test_camera_move_absent():
     assert vp.check_camera_move("没有任何运镜关键词的提示词") == []
 
 
+def test_camera_move_does_not_match_narrative_single_characters():
+    text = "人物跟一个人聊天，推动项目，拉开话题。"
+    assert vp.check_camera_move(text) == []
+
+
+def test_camera_move_matches_labeled_field():
+    assert vp.check_camera_move("- 运镜：手持跟拍")
+
+
+def test_reference_image_does_not_cross_section_boundary():
+    text = "参考图描述：\n【氛围画质】\n这里是足够长的中文描述内容"
+    assert not vp.has_reference_image_desc(text)
+
+
+def test_reference_image_accepts_next_line_description():
+    text = "参考图描述：\n金属机器人站在废弃加油站前，胸前有红色 LED 光"
+    assert vp.has_reference_image_desc(text)
+
+
 # --- 8. 字数边界 ---
 
 def test_count_chars_99():

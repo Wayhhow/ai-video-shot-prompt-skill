@@ -78,7 +78,7 @@ v0.1 收尾后发现三大问题：
 | 本地 CI 复刻 | 8 步 | `bash scripts/ci_local.sh` | ✅ 8/8 |
 | GitHub Actions CI | 矩阵 5×N | push 后自动跑 | 等待 push 后首次验证 |
 
-**总计**：47 个测试 + 8 步本地检查 + 5 个 Python 版本 CI 矩阵。
+**总计（v0.2 基线）**：44 个测试 + 8 步本地检查 + 5 个 Python 版本 CI 矩阵。后续新增测试以 CI 实际结果为准。
 
 ## 风险与回滚 Risk & Rollback
 
@@ -148,9 +148,9 @@ AUDIO=/path/to/audio.wav python assets/transcribe.py      # ✅
 ### Step 3: 跑新测试验证
 
 ```bash
-pip install pytest
+pip install -e ".[dev]"
 pytest tests/ -v
-# 期望：47 passed
+# v0.2 基线期望：44 passed；后续新增测试以 CI 实际结果为准
 ```
 
 ## 验收 Checklist

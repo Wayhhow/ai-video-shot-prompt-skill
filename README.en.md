@@ -2,7 +2,7 @@
 
 # Crafting AI Video Shot Prompts
 
-**[中文](README.md) | [English](README-en.md)**
+**[中文](README.md) | [English](README.en.md)**
 
 **Write de-AI-flavored Chinese shot-list prompts for AI video generators (即梦 / Vidu / 可灵 / 小云雀 / Sora / Runway).**
 
@@ -85,7 +85,7 @@ Most AI video prompts suffer from 3 common problems:
 - Shot 5: Closing silhouette (1/5) — Wide / Center symmetric / Pull back + sunset backlight
 ```
 
-> **You can write these without this skill, but using it reduces "plastic look" card-draws by ~60% and "motion breakage" by ~80% on average.**
+> **You can write these without this skill, but it organizes shot structure, action causality, and constraints into prompts that are easier to reuse and refine.**
 
 ## Three-Part Framework
 
@@ -152,6 +152,12 @@ Reports: whether all three sections are present / missing de-AI keywords / shot 
 
 ```bash
 bash scripts/ci_local.sh
+```
+
+Install development dependencies with:
+
+```bash
+python -m pip install pytest PyYAML
 ```
 
 One command runs 8 checks (pytest + shellcheck + Python syntax + 3 template self-checks + 2 bash syntax). Verifies v0.2 behavior without internet.

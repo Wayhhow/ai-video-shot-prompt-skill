@@ -78,6 +78,14 @@ def has_any(text: str, keywords: list) -> list:
     return [k for k in keywords if k in text]
 
 
+def _labeled_values(text: str, label: str) -> list:
+    """Extract values from `label:` fields without scanning unrelated prose."""
+    values = []
+    pattern = re.compile(rf"(?:^|[\n-])\s*{re.escape(label)}\s*[:：]\s*([^\n]+)")
+    values.extend(m.group(1).strip() for m in pattern.finditer(text))
+    return values
+
+
 def find_section_positions(text: str) -> dict:
     """返回每个大节在文本中首次出现的位置（字符 offset）。未找到则不在 dict 中。"""
     positions = {}
@@ -114,27 +122,31 @@ def check_deai(text: str) -> list:
 
 
 def check_shot_size(text: str) -> list:
-    return has_any(text, SHOT_SIZES)
+    values = _labeled_values(text, "景别")
+    return has_any("\n".join(values), SHOT_SIZES)
 
 
 def check_composition(text: str) -> list:
-    return has_any(text, COMPOSITIONS)
+    values = _labeled_values(text, "构图")
+    return has_any("\n".join(values), COMPOSITIONS)
 
 
 def check_camera_move(text: str) -> list:
-    return has_any(text, CAMERA_MOVES)
+    values = _labeled_values(text, "运镜")
+    if not values:
+        return []
+    return has_any("\n".join(values), CAMERA_MOVES)
 
 
 def has_reference_image_desc(text: str) -> bool:
     """v0.2.0 加固：同时匹配『参考图描述：xxx』『参考图：xxx』『参考图: xxx』及换行后描述。
     要求 30 字符内至少 4 个中文字（避免「参考图: 空白」误报通过）。
     """
-    patterns = [
-        r"参考图描述\s*[:：][\s\S]{0,80}?[\u4e00-\u9fff]{4,}",
-        r"参考图\s*[:：][\s\S]{0,80}?[\u4e00-\u9fff]{4,}",
-        r"参考图\s*\n[\s\S]{0,80}?[\u4e00-\u9fff]{4,}",
-    ]
-    return any(re.search(p, text) for p in patterns)
+    pattern = re.compile(
+        r"(?:^|\n)\s*(?:[-*+]\s*)?参考图(?:描述)?\s*(?:[:：]\s*|\n\s*)"
+        r"([^\n【】]{4,})"
+    )
+    return any(len(re.findall(r"[\u4e00-\u9fff]", m.group(1))) >= 4 for m in pattern.finditer(text))
 
 
 def check_sound_limit(text: str) -> bool:

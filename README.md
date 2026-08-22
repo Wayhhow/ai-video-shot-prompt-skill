@@ -84,7 +84,7 @@
 - 分镜 5：收尾剪影（1/5）—— 全景 / 中心对称 / 拉远 + 夕阳逆光
 ```
 
-> **不用本 skill 也能写，但用本 skill 写的提示词，平均能减少 60% 的"塑料感"和 80% 的"动作崩坏"抽卡次数。**
+> **不用本 skill 也能写，但本 skill 会把镜头结构、动作因果和限制条件整理成更稳定、可复用的提示词。**
 
 ## 三大部分框架
 
@@ -151,6 +151,12 @@ python scripts/validate_prompt.py my_prompt.txt
 
 ```bash
 bash scripts/ci_local.sh
+```
+
+开发环境依赖可用以下命令安装：
+
+```bash
+python -m pip install pytest PyYAML
 ```
 
 一键跑完 8 步检查（pytest + shellcheck + Python 语法 + 3 套模板自检 + 2 个 bash 语法），无需联网即可验证 v0.2 行为不变。
