@@ -15,6 +15,7 @@ ai-video-shot-prompt-skill/
 ├── CHANGELOG.md                       # 版本变更记录
 ├── INSTALL.md                         # 安装到 .trae/skills/ 的步骤
 ├── INDEX.md                           # 本文件：开发态交付清单
+├── pyproject.toml                     # 项目元数据 + pytest 配置
 ├── .gitignore                         # 排除 transcript 与 audio 产物
 │
 ├── references/                        # 详细参考（按需加载）
@@ -23,6 +24,7 @@ ai-video-shot-prompt-skill/
 │   ├── camera-and-composition.md      # 景别/构图/运镜完整清单
 │   ├── workflow-and-storyboard.md     # 小云雀短剧 Agent 2.0 工作流
 │   ├── post-production.md             # 后期剪辑技巧（动作匹配/调色/光影）
+│   ├── prompt-quality-checklist.md    # 12 条可勾选质量清单（v0.2 引入）
 │   └── examples.md                    # 视频中的完整示例（鸵鸟/机器人/别墅）
 │
 ├── templates/                         # 提示词模板
@@ -32,7 +34,15 @@ ai-video-shot-prompt-skill/
 │   └── style-presets.md               # 15 种风格预设（原子朋克/赛博朋克/水墨/机甲/古风…）
 │
 ├── scripts/
-│   └── validate_prompt.py             # 提示词结构自检脚本
+│   ├── validate_prompt.py             # 提示词结构自检脚本
+│   └── ci_local.sh                    # 本地一键复刻 CI（8 步检查）
+│
+├── tests/                             # pytest 测试套件（5 个模块 / 57 个用例）
+│   ├── test_validate_prompt.py        # 自检脚本单元测试 + CLI/边界测试
+│   ├── test_regression.py             # 3 套模板回归 + baseline 对照
+│   ├── test_merge_text.py             # 转录合并脚本测试
+│   ├── test_simulate_workflow.py      # 端到端工作流模拟测试
+│   └── test_skill_frontmatter.py      # SKILL.md frontmatter 校验
 │
 └── assets/                            # 工具脚本（不包含视频素材）
     ├── transcribe.py                  # faster-whisper 转录脚本（供用户自行从源视频生成）
@@ -116,7 +126,7 @@ python scripts/validate_prompt.py my_prompt.txt
 | 仓库实际大小 | ~325 KB |
 | Markdown 文档 | 16 |
 | Python 脚本 | 3（validate_prompt / transcribe / merge_text） |
-| 单元测试 | 27 个（`tests/test_validate_prompt.py`） |
+| 单元测试 | 57 个（`tests/`，5 个测试模块） |
 | 源数据（开发态，不上传） | 5 |
 | 视频时长（源） | 42 分 53 秒 |
 | 视频转录字数（仅本地） | ~12,000 中文字 |

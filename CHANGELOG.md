@@ -11,6 +11,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - v0.3 — Auto storyboard timing allocator
 - v0.4 — LLM-as-judge prompt quality scorer
 
+## [0.2.1] - 2026-09-06
+
+### Fixed
+- `install.ps1` 改为 UTF-8 with BOM 保存：修复 Windows PowerShell 5.1（中文 GBK 代码页）
+  按 ANSI 读取无 BOM 文件导致的解析失败（"字符串缺少终止符"），头部声明的 5.1+ 兼容恢复有效
+- `scripts/validate_prompt.py` 景别/构图/运镜检查新增【画面内容】段内回退扫描：
+  标签字段（`景别：xxx`）无匹配时，兼容 README 演示的行内分镜写法
+  （"分镜 1：…… 中景 / 对角线构图 / 手持跟拍"），README 官方示例现在可通过自检（exit 0）。
+  仍不扫全文，"推/拉/跟"等单字在叙事文本中的误报防护保持不变
+- `scripts/validate_prompt.py` 的 stdin 与 stdout/stderr 一致强制 UTF-8：
+  修复 GBK 代码页 Windows 上 `cat prompt.txt | python validate_prompt.py -` 报
+  `'gbk' codec can't decode` 的问题
+- `install.sh` 目标路径先规范化（`cd -P` 解析 `.` / `./` / `..`）再与源目录比较：
+  修复 `install.sh .` 等相对路径绕过"源=目标"防护的问题
+- `scripts/ci_local.sh` 用独立 STEP 计数器：修复 shellcheck 缺失跳过时步骤编号重复
+- 修复 `CHANGELOG.md` / `docs/PR_v0.2.0.md` / `.trae/specs/verify-and-pr/spec.md` 中的相对链接错位
+
+### Added
+- 回归测试 +4（套件共 57 个）：行内分镜写法（README 演示格式）必须被景别/构图/运镜检查
+  识别、回退扫描仅限【画面内容】段、标签字段优先级不变、README 顶部演示提示词必须
+  通过 validate_prompt.py 自检（文档与工具一致性锁定）
+
 ## [0.2.0] - 2026-06-07
 
 ### Added
@@ -50,8 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 基线（v0.1.0 行为）输出保存在 `docs/baseline-v0.1.txt`，便于 v0.2 行为对照
 - 5 套新风格预设的关键词已并入 `references/keyword-library.md`
 - 本版本不重写方法论本体，仅在末尾追加新预设与新检查项
-- **PR 描述**：[docs/PR_v0.2.0.md](../docs/PR_v0.2.0.md)（完整动机 / Changes / Test Matrix / 升级指引）
-- **下阶段路线**：[docs/NEXT_STEPS.md](../docs/NEXT_STEPS.md)（v0.3 多分镜分配 / v0.4 LLM-as-judge / v1.0 平台 API）
+- **PR 描述**：[docs/PR_v0.2.0.md](docs/PR_v0.2.0.md)（完整动机 / Changes / Test Matrix / 升级指引）
+- **下阶段路线**：[docs/NEXT_STEPS.md](docs/NEXT_STEPS.md)（v0.3 多分镜分配 / v0.4 LLM-as-judge / v1.0 平台 API）
 
 ## [0.1.0] - 2026-06
 

@@ -359,3 +359,83 @@ def test_subprocess_no_args_exits_2():
     assert result.returncode == 2
     assert "ERROR" in result.stderr
     assert "--audio" in result.stderr
+
+
+# --- 14. v0.2.1：行内分镜写法的回退识别（README 演示格式） ---
+
+INLINE_STORYBOARD = """【基础设定】
+- 时间：黄昏，夕阳低角度斜射
+- 地点：加州 1 号公路旁废弃加油站
+- 人物：金属机器人主角，3 只狂暴丧尸
+- 参考图描述：金属机器人 3/4 侧视角，胸前 LED 红光
+- 声音限制：仅保留机械碰撞声，无需 BGM
+
+【氛围画质】
+- 风格核心：原子朋克、末日丧尸、电影动作
+- 去 AI 味：超写实、极致逼真、真人实景拍摄
+- 限制词：杜绝游戏CG感、杜绝动作僵硬
+- 色彩影调：青橙对比色调
+
+【画面内容】
+- 总分镜：5 个 / 总时长：约 10 秒
+- 分镜 1：开场入画（1/5）—— 中景 / 对角线构图 / 手持跟拍
+- 分镜 2：掏枪射击（1/5）—— 手部特写 / 推 / 子弹时间
+- 分镜 3：电磁拳（1/5）—— 中近景 / 环绕
+- 分镜 5：收尾剪影（1/5）—— 全景 / 中心对称 / 拉远 + 夕阳逆光
+"""
+
+
+def test_inline_storyboard_format_detected():
+    """行内分镜写法（无 景别： 标签）也应被景别/构图/运镜检查识别。"""
+    assert vp.check_shot_size(INLINE_STORYBOARD), "行内写法的景别应被识别"
+    assert vp.check_composition(INLINE_STORYBOARD), "行内写法的构图应被识别"
+    assert vp.check_camera_move(INLINE_STORYBOARD), "行内写法的运镜应被识别"
+
+
+def test_fallback_only_scans_content_section():
+    """回退扫描只作用于【画面内容】段：【基础设定】里的叙事单字不应误报。"""
+    text = """【基础设定】
+- 人物：他跟丢了目标，推动剧情的人
+- 参考图描述：足够长的中文参考图描述内容示例
+
+【氛围画质】
+- 去 AI 味：超写实
+
+【画面内容】
+- 主角推开大门（此处应检出 推）
+"""
+    moves = vp.check_camera_move(text)
+    assert moves == ["推"], f"只应检出画面内容里的 推: {moves}"
+    assert vp.check_shot_size(text) == [], "叙事文本不应误报景别"
+
+
+def test_labeled_still_takes_priority():
+    """有显式标签字段时行为与 v0.2.0 一致：叙事单字仍不误报。"""
+    text = "- 运镜：手持跟拍\n人物跟一个人聊天，推动项目，拉开话题。"
+    moves = vp.check_camera_move(text)
+    assert moves, "标签字段应检出运镜"
+    assert "推" not in moves, "叙事单字不应混入"
+
+
+def test_readme_demo_prompt_passes_validator(tmp_path):
+    """文档与工具一致性：README 顶部演示提示词必须通过自检（exit 0）。"""
+    import re
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    m = re.search(r"### 一段为即梦.*?```text\n(.*?)```", readme, re.S)
+    assert m, "README 演示代码块未找到"
+    demo = m.group(1)
+    p = tmp_path / "readme_demo.txt"
+    p.write_text(demo, encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_prompt.py", str(p)],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    assert result.returncode == 0, (
+        f"README 演示提示词应通过自检: exit={result.returncode}\n"
+        f"stdout={result.stdout}\nstderr={result.stderr}"
+    )
+    assert "[OK] 提示词结构通过" in result.stdout

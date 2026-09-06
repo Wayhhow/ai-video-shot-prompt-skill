@@ -80,7 +80,7 @@
 4. **Test Matrix**：本地 27/27 + CI 矩阵 + 3 模板回归
 5. **Risk & Rollback**：BREAKING 影响面 + 单 PR revert 方案
 6. **Upgrade Guide**：v0.1 → v0.2 升级 3 步（改大节标题、修正脚本入口、跑新测试）
-7. **Checklist**：与 [checklist.md](../.trae/specs/audit-and-roadmap/checklist.md) 联动
+7. **Checklist**：与 [checklist.md](../audit-and-roadmap/checklist.md) 联动
 
 #### Scenario: 完整 PR 描述
 - **WHEN** reviewer 阅读 PR 描述
@@ -118,8 +118,8 @@
 ### Requirement: CHANGELOG 链接补全
 
 `CHANGELOG.md` 的 `[0.2.0]` 段加 2 个链接：
-- `[PR 描述 → docs/PR_v0.2.0.md](../docs/PR_v0.2.0.md)`
-- `[下阶段路线 → docs/NEXT_STEPS.md](../docs/NEXT_STEPS.md)`
+- `[PR 描述 → docs/PR_v0.2.0.md](../../../docs/PR_v0.2.0.md)`
+- `[下阶段路线 → docs/NEXT_STEPS.md](../../../docs/NEXT_STEPS.md)`
 
 #### Scenario: CHANGELOG 自包含
 - **WHEN** 用户只读 CHANGELOG

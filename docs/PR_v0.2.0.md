@@ -58,7 +58,7 @@ v0.1 收尾后发现三大问题：
 2. `assets/transcribe.py` 必须通过 `--audio` 或环境变量 `AUDIO` 显式传入
 3. `assets/merge_text.py` 同上（`--src` / `--dst` / `MERGE_SRC` / `MERGE_DST`）
 
-详见 [CHANGELOG.md](../../CHANGELOG.md) `[0.2.0]` 段。
+详见 [CHANGELOG.md](../CHANGELOG.md) `[0.2.0]` 段。
 
 ### Docs
 

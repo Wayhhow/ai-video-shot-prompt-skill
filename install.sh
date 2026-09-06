@@ -32,6 +32,12 @@ for arg in "$@"; do
 done
 DST="${DST:-$HOME/.trae/skills/crafting-ai-video-shot-prompts}"
 
+# 规范化已存在的目标路径（"."、"./"、含 ".." 的路径等），
+# 与 $SRC 同为绝对物理路径后再比较；目标尚不存在时保留原值
+if DST_NORM="$(cd -P "$DST" 2>/dev/null && pwd)"; then
+  DST="$DST_NORM"
+fi
+
 # 防止把脚本装到自己头上
 if [ "$SRC" = "$DST" ]; then
   echo "ERROR: 源目录与目标目录相同: $SRC" >&2

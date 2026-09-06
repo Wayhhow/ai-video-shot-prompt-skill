@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-提示词结构自检工具（v0.2.0 升级）
+提示词结构自检工具（v0.2.1）
 
 检查一个 AI 视频提示词是否符合"基础设定 / 氛围画质 / 画面内容"三大部分框架，
 以及是否包含去 AI 味关键词、景别/构图/运镜、参考图描述等关键要素。
@@ -12,6 +12,13 @@ v0.2.0 行为变更（BREAKING）：
 - 参考图描述正则加固（接受"参考图描述："、"参考图："、"参考图" + 换行/冒号）
 - 字数上下限改为 CLI 参数 --min-chars / --max-chars（默认 100/1500 保持不变）
 - --strict 模式下：顺序错乱会与非空 issues 一起返回非零退出码
+
+v0.2.1 修复：
+- 景别/构图/运镜在标签字段（"景别：xxx"）无匹配时，回退到【画面内容】段内扫描，
+  兼容 README 演示的行内分镜写法（"分镜 1：…… 中景 / 对角线构图 / 手持跟拍"）。
+  仍不扫全文，避免叙事文本里的"推/拉/跟"等单字误报（v0.2.0 修复的行为保持不变）
+- stdin 与 stdout/stderr 一致强制 UTF-8（修复 GBK 代码页 Windows 上管道输入报
+  'gbk' codec can't decode 的问题）
 
 Usage:
     python validate_prompt.py <prompt_file>
@@ -30,11 +37,12 @@ import io
 import argparse
 from pathlib import Path
 
-# 强制 stdout/stderr 使用 UTF-8（解决 Windows GBK 编码问题）
+# 强制 stdout/stderr/stdin 使用 UTF-8（解决 Windows GBK 编码问题）
 if hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+        sys.stdin.reconfigure(encoding="utf-8", errors="replace")
     except Exception:
         pass
 
@@ -86,6 +94,16 @@ def _labeled_values(text: str, label: str) -> list:
     return values
 
 
+def _content_section_text(text: str) -> str:
+    """返回【画面内容】段及其后全部文本；段不存在时返回空串。
+
+    供景别/构图/运镜的回退扫描使用：这些要素按框架约定只出现在
+    【画面内容】里，只扫该段可在兼容行内写法的同时不误伤叙事文本。
+    """
+    m = SECTION_PATTERNS["画面内容"].search(text)
+    return text[m.start():] if m else ""
+
+
 def find_section_positions(text: str) -> dict:
     """返回每个大节在文本中首次出现的位置（字符 offset）。未找到则不在 dict 中。"""
     positions = {}
@@ -123,19 +141,26 @@ def check_deai(text: str) -> list:
 
 def check_shot_size(text: str) -> list:
     values = _labeled_values(text, "景别")
-    return has_any("\n".join(values), SHOT_SIZES)
+    matched = has_any("\n".join(values), SHOT_SIZES)
+    if not matched:
+        # 回退：兼容行内分镜写法（"分镜 1：…… 中景 / 对角线构图 / 手持跟拍"）
+        matched = has_any(_content_section_text(text), SHOT_SIZES)
+    return matched
 
 
 def check_composition(text: str) -> list:
     values = _labeled_values(text, "构图")
-    return has_any("\n".join(values), COMPOSITIONS)
+    matched = has_any("\n".join(values), COMPOSITIONS)
+    if not matched:
+        matched = has_any(_content_section_text(text), COMPOSITIONS)
+    return matched
 
 
 def check_camera_move(text: str) -> list:
     values = _labeled_values(text, "运镜")
-    if not values:
-        return []
-    return has_any("\n".join(values), CAMERA_MOVES)
+    if values:
+        return has_any("\n".join(values), CAMERA_MOVES)
+    return has_any(_content_section_text(text), CAMERA_MOVES)
 
 
 def has_reference_image_desc(text: str) -> bool:

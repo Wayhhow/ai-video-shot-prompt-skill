@@ -18,7 +18,7 @@
 [![Skill: Trae / Claude](https://img.shields.io/badge/skill-Trae%20%2F%20Claude-blueviolet)](SKILL.md)
 [![Language: 中文](https://img.shields.io/badge/language-中文-red)]()
 [![Inspired by: Mx-Shell](https://img.shields.io/badge/inspired%20by-Mx--Shell-ff69b4)](https://space.bilibili.com/388217494)
-[![Status: v0.2](https://img.shields.io/badge/version-v0.2-orange)](CHANGELOG.md)
+[![Status: v0.2.1](https://img.shields.io/badge/version-v0.2.1-orange)](CHANGELOG.md)
 [![CI](https://github.com/Wayhhow/ai-video-shot-prompt-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Wayhhow/ai-video-shot-prompt-skill/actions/workflows/ci.yml)
 [![GitHub Repo stars](https://img.shields.io/github/stars/Wayhhow/ai-video-shot-prompt-skill?style=social)](https://github.com/Wayhhow/ai-video-shot-prompt-skill)
 
@@ -208,6 +208,7 @@ crafting-ai-video-shot-prompt-skill/
 ├── CONTRIBUTING.md                 # 贡献指南
 ├── CODE_OF_CONDUCT.md              # 行为准则
 ├── INSTALL.md                      # 安装详解
+├── pyproject.toml                  # 项目元数据 + pytest 配置
 ├── references/                     # 详细参考（按需加载）
 │   ├── framework.md                # 三大部分详解
 │   ├── keyword-library.md          # 200+ 关键词库
@@ -222,7 +223,14 @@ crafting-ai-video-shot-prompt-skill/
 │   ├── action-scene.md
 │   └── style-presets.md
 ├── scripts/
-│   └── validate_prompt.py          # 提示词结构自检
+│   ├── validate_prompt.py          # 提示词结构自检
+│   └── ci_local.sh                 # 本地一键复刻 CI（8 步检查）
+├── tests/                          # pytest 测试套件（5 个模块 / 57 个用例）
+│   ├── test_validate_prompt.py
+│   ├── test_regression.py
+│   ├── test_merge_text.py
+│   ├── test_simulate_workflow.py
+│   └── test_skill_frontmatter.py
 ├── .github/
 │   ├── workflows/
 │   │   └── ci.yml                  # CI: pytest across Python 3.9–3.13

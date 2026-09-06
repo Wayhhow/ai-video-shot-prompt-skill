@@ -18,7 +18,7 @@
 [![Skill: Trae / Claude](https://img.shields.io/badge/skill-Trae%20%2F%20Claude-blueviolet)](SKILL.md)
 [![Language: 中文 / English](https://img.shields.io/badge/language-中文%20%2F%20English-red)]()
 [![Inspired by: Mx-Shell](https://img.shields.io/badge/inspired%20by-Mx--Shell-ff69b4)](https://space.bilibili.com/388217494)
-[![Status: v0.2](https://img.shields.io/badge/version-v0.2-orange)](CHANGELOG.md)
+[![Status: v0.2.1](https://img.shields.io/badge/version-v0.2.1-orange)](CHANGELOG.md)
 [![CI](https://github.com/Wayhhow/ai-video-shot-prompt-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Wayhhow/ai-video-shot-prompt-skill/actions/workflows/ci.yml)
 [![GitHub Repo stars](https://img.shields.io/github/stars/Wayhhow/ai-video-shot-prompt-skill?style=social)](https://github.com/Wayhhow/ai-video-shot-prompt-skill)
 
@@ -213,6 +213,7 @@ crafting-ai-video-shot-prompt-skill/
 ├── CONTRIBUTING.md                  # How to contribute
 ├── CODE_OF_CONDUCT.md               # Community code of conduct
 ├── INSTALL.md                       # Detailed installation
+├── pyproject.toml                   # Project metadata + pytest config
 ├── references/                      # Detailed reference (Chinese, loaded on demand)
 │   ├── framework.md                 # Three-part framework deep-dive
 │   ├── keyword-library.md           # 200+ keyword library
@@ -227,7 +228,14 @@ crafting-ai-video-shot-prompt-skill/
 │   ├── action-scene.md
 │   └── style-presets.md
 ├── scripts/
-│   └── validate_prompt.py           # Prompt structure self-check
+│   ├── validate_prompt.py           # Prompt structure self-check
+│   └── ci_local.sh                  # One-command local CI replica (8 checks)
+├── tests/                           # pytest suite (5 modules / 57 tests)
+│   ├── test_validate_prompt.py
+│   ├── test_regression.py
+│   ├── test_merge_text.py
+│   ├── test_simulate_workflow.py
+│   └── test_skill_frontmatter.py
 ├── .github/
 │   ├── workflows/
 │   │   └── ci.yml                   # CI: pytest across Python 3.9–3.13

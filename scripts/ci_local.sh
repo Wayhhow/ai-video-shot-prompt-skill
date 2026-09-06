@@ -13,12 +13,14 @@ cd "$ROOT"
 
 PASS=0
 FAIL=0
+STEP=0
 
 step() {
   local name="$1"
   shift
+  STEP=$((STEP + 1))
   echo
-  echo "=== [Step $((PASS + FAIL + 1))] $name ==="
+  echo "=== [Step $STEP] $name ==="
   if "$@"; then
     echo "    [OK] $name"
     PASS=$((PASS + 1))
@@ -35,8 +37,9 @@ step "pytest tests/" python -m pytest tests/ -v
 if command -v shellcheck >/dev/null 2>&1; then
   step "shellcheck install.sh" shellcheck install.sh
 else
+  STEP=$((STEP + 1))
   echo
-  echo "=== [Step 2] shellcheck install.sh ==="
+  echo "=== [Step $STEP] shellcheck install.sh ==="
   echo "    [SKIP] shellcheck 未安装（macOS: brew install shellcheck）"
 fi
 

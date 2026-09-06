@@ -1,4 +1,4 @@
-# install.ps1 - 把本 skill 一键安装到 Trae IDE 的 skills 目录
+﻿# install.ps1 - 把本 skill 一键安装到 Trae IDE 的 skills 目录
 #
 # 用法：
 #   .\install.ps1                                    # 安装到默认路径
@@ -30,6 +30,11 @@ if ([string]::IsNullOrEmpty($DestDir) -or $DestDir -eq "\" -or $DestDir -eq "/")
 # 用 GetFullPath 而非 Resolve-Path：目标目录尚不存在时 Resolve-Path 会报错
 $srcFull = [IO.Path]::GetFullPath($src).TrimEnd('\', '/')
 $dstFull = [IO.Path]::GetFullPath($DestDir).TrimEnd('\', '/')
+# 防止装到驱动器根目录（如 C:\ 规范化后为 "C:"）
+if ($dstFull -match '^[A-Za-z]:$' -or [string]::IsNullOrWhiteSpace($dstFull)) {
+    Write-Error "ERROR: 目标目录无效: $DestDir"
+    exit 2
+}
 if ($srcFull -ieq $dstFull) {
     Write-Error "ERROR: 源目录与目标目录相同: $src"
     exit 2
@@ -66,3 +71,6 @@ Write-Host ""
 Write-Host "下一步："
 Write-Host "  1. 重启 Trae IDE 或重载窗口"
 Write-Host "  2. 在对话中提到「写一个 AI 视频提示词」即可触发本 skill"
+
+# 显式成功退出码：避免被脚本链/CI 调用时 $LASTEXITCODE 残留上一次命令的值
+exit 0
